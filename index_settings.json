@@ -1,0 +1,22 @@
+{
+    "settings": {
+      "number_of_shards": 5,
+      "number_of_replicas": 3,
+      "analysis": {
+        "tokenizer": {
+          "standard": {
+            "type": "standard"
+          }
+        }
+      }
+    },
+    "mappings": {
+      "properties": {
+        "content": {
+          "type": "text"
+        },
+        "title": { "type": "text" },
+        "timestamp": { "type": "date" }
+      }
+    }
+  }
