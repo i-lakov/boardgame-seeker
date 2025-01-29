@@ -11,12 +11,17 @@
       }
     },
     "mappings": {
-      "properties": {
-        "content": {
-          "type": "text"
-        },
-        "title": { "type": "text" },
-        "timestamp": { "type": "date" }
+      "properties": 
+      {
+        "id": {"type": "integer"},
+        "details.maxplayers": {"type": "integer"},
+        "details.minage": {"type": "integer"},
+        "details.minplayers": {"type": "integer"},
+        "details.name": {"type": "text"},
+        "details.playingtime": {"type": "integer"},
+        "attributes.boardgamecategory": {"type": "keyword"},
+        "attributes.boardgamemechanic": {"type": "keyword"},
+        "details.description": {"type": "text"}
       }
     }
   }
