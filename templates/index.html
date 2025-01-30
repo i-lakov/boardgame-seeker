@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <title>Game Search</title>
     <script>
         async function searchGames() {
@@ -27,14 +28,22 @@
             resultsDiv.innerHTML = "<h3>Results:</h3><ul>";
             data.forEach(game => {
                 resultsDiv.innerHTML += `
-                    <li>
-                        <b>${game.name}</b> - Max Players: ${game.maxplayers}, 
-                        Min Age: ${game.minage}, Min Players: ${game.minplayers}, 
-                        Playing Time: ${game.playingtime}, 
-                        Categories: ${game.categories.join(", ")}, 
-                        Mechanics: ${game.mechanics.join(", ")}, 
-                        Score: ${game.score}
-                    </li>`;
+                    <div class="container game">
+                        <div class="name">${game.name}</div>
+                        <div class="tiles">
+                            <div class="container tile players">
+                                People
+                                <div class="maxplayers">${game.maxplayers}</div> -
+                                <div class="minplayers">${game.minplayers}</div>
+                            </div>
+                            <div class="container tile minage">Min Age: ${game.minage}</div>
+                            <div class="container tile playingtime">Playing Time: ${game.playingtime}</div>
+                        </div>
+                        <div class="categories">Categories: ${game.categories.join(", ")}</div>
+                        <div class="mechanics">Mechanics: ${game.mechanics.join(", ")}</div>
+                        <div class="description">Description: ${game.description}</div>
+                        <div class="score">Score: ${game.score}</div>
+                    </div>`;
             });
             resultsDiv.innerHTML += "</ul>";
         }
