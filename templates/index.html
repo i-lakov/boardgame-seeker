@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Search</title>
+    <script>
+        async function searchGames() {
+            let params = new URLSearchParams();
+            params.append("name", document.getElementById("name").value);
+            params.append("description", document.getElementById("description").value);
+            params.append("maxplayers", document.getElementById("maxplayers").value);
+            params.append("minage", document.getElementById("minage").value);
+            params.append("minplayers", document.getElementById("minplayers").value);
+            params.append("playingtime", document.getElementById("playingtime").value);
+
+            let category = document.getElementById("category").value;
+            if (category) params.append("category", category);
+
+            let mechanic = document.getElementById("mechanic").value;
+            if (mechanic) params.append("mechanic", mechanic);
+
+            let response = await fetch(`/search?${params.toString()}`);
+            let data = await response.json();
+
+            let resultsDiv = document.getElementById("results");
+            resultsDiv.innerHTML = "<h3>Results:</h3><ul>";
+            data.forEach(game => {
+                resultsDiv.innerHTML += `
+                    <li>
+                        <b>${game.name}</b> - Max Players: ${game.maxplayers}, 
+                        Min Age: ${game.minage}, Min Players: ${game.minplayers}, 
+                        Playing Time: ${game.playingtime}, 
+                        Categories: ${game.categories.join(", ")}, 
+                        Mechanics: ${game.mechanics.join(", ")}, 
+                        Score: ${game.score}
+                    </li>`;
+            });
+            resultsDiv.innerHTML += "</ul>";
+        }
+    </script>
+</head>
+<body>
+    <h1>Game Search</h1>
+    <label>Game Name (Fuzzy):</label>
+    <input type="text" id="name" placeholder="Enter game name">
+    
+    <label>Description (Fuzzy):</label>
+    <input type="text" id="description" placeholder="Enter game description">
+    
+    <label>Max Players (Less Than):</label>
+    <input type="number" id="maxplayers" value="5">
+    
+    <label>Min Age (Greater Than or Equal):</label>
+    <input type="number" id="minage" value="0">
+    
+    <label>Min Players (Greater Than or Equal):</label>
+    <input type="number" id="minplayers" value="1">
+    
+    <label>Playing Time (Less Than):</label>
+    <input type="number" id="playingtime" value="60">
+    
+    <label>Boardgame Category:</label>
+    <input type="text" id="category" placeholder="Enter category">
+    
+    <label>Boardgame Mechanic:</label>
+    <input type="text" id="mechanic" placeholder="Enter mechanic">
+    
+    <button onclick="searchGames()">Search</button>
+
+    <div id="results"></div>
+</body>
+</html>
