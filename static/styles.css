@@ -1,6 +1,7 @@
 body
 {
     font-family: Arial, Helvetica, sans-serif;
+    background-color: lightgray;
 }
 
 .container
@@ -12,7 +13,8 @@ body
 
 .game
 {
-    background-color: lightgreen;
+    background-color: white;
+    box-shadow: 0px 7px 20px -6px rgba(0, 0, 0, 0.5);
 }
 
 .name
@@ -28,5 +30,40 @@ body
 
 .tile
 {
-    background-color: brown;
+    background-color: rgb(141, 141, 255);
+    font-size: 1.2rem;
+}
+
+.players
+{
+    display: flex;
+    flex-direction: row;
+}
+
+.input-holder
+{
+    display: flex;
+}
+
+.input-container > label
+{
+    font-size: 0.8rem;
+}
+
+.input-container > input
+{
+    appearance: none;
+	border: none;
+	outline: none;
+	border-bottom: .2em solid rgb(141, 141, 255);
+	background: white;
+	border-radius: .2em .2em 0 0;
+	padding: .4em;
+	color: rgb(141, 141, 255);
+}
+
+.title
+{
+    font-size: 3rem;
+    text-align: center;
 }

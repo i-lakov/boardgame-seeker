@@ -49,7 +49,7 @@ def search():
     if maxplayers:
         must_conditions.append({
             "range": {
-                "details.maxplayers": {"lt": int(maxplayers)}
+                "details.maxplayers": {"lte": int(maxplayers)}
             }
         })
     
@@ -70,7 +70,7 @@ def search():
     if playingtime:
         must_conditions.append({
             "range": {
-                "details.playingtime": {"lt": int(playingtime)}
+                "details.playingtime": {"lte": int(playingtime)}
             }
         })
 
