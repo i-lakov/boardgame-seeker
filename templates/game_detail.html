@@ -13,28 +13,38 @@
 
             let gameDetailsDiv = document.getElementById("game-details");
             gameDetailsDiv.innerHTML = `
-                <h1>${data.game.details.name}</h1>
+                <div class="name">${data.game.details.name}</div>
                 <div class="tiles">
-                    <div class="container tile players">
+                    <div class="container tile flex-r">
                         <img src="/static/assets/people.png" width="20">
-                        <div class="minplayers">${data.game.details.minplayers}</div>
+                        <div>${data.game.details.minplayers}</div>
                         <div>&nbsp;-&nbsp;</div>
-                        <div class="maxplayers">${data.game.details.maxplayers}</div>
+                        <div>${data.game.details.maxplayers}</div>
                     </div>
                     <div class="container tile minage">Min Age: ${data.game.details.minage}</div>
-                    <div class="container tile playingtime">Playing Time: ${data.game.details.playingtime}</div>
+                    <div class="container tile flex-r">
+                        <img src="/static/assets/time-left.png" width="20" height="20">
+                        <div>${data.game.details.playingtime} min.</div>
+                    </div>
                 </div>
-                <div class="categories">Categories: ${data.game.attributes.boardgamecategory.join(", ")}</div>
-                <div class="mechanics">Mechanics: ${data.game.attributes.boardgamemechanic.join(", ")}</div>
-                <div class="description">Description: ${data.game.details.description}</div>
+                <p> Categories: </p>
+                <div class="categories">
+                     ${data.game.attributes.boardgamecategory.map(category => `<div class="container category">${category}</div>`).join("")}
+                </div>
+                <p> Mechanics: </p>
+                <div class="mechanics">
+                     ${data.game.attributes.boardgamemechanic.map(mechanic => `<div class="container mechanic">${mechanic}</div>`).join("")}
+                </div>
+                <p> Description: </p>
+                <div class="description">${data.game.details.description}</div>
             `;
 
             let similarGamesDiv = document.getElementById("similar-games");
-            similarGamesDiv.innerHTML = "<h3>Similar Games:</h3><ul>";
+            similarGamesDiv.innerHTML = `<div class="name">Similar Games:</div><ul>`;
             data.similar_games.forEach(game => {
                 similarGamesDiv.innerHTML += `
                     <li>
-                        <a href="/game/${game.details.name}" target="_blank">${game.details.name}</a>
+                        <a href="/game/${game.details.name}">${game.details.name}</a>
                     </li>`;
             });
             similarGamesDiv.innerHTML += "</ul>";
@@ -44,7 +54,8 @@
     </script>
 </head>
 <body>
-    <div id="game-details"></div>
-    <div id="similar-games"></div>
+    <h1 class="title" onclick="window.location.href='/'">Board Game Search</h1>
+    <div class="container game noclick" id="game-details"></div>
+    <div class="container game noclick" id="similar-games"></div>
 </body>
 </html>

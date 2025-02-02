@@ -7,7 +7,7 @@ body
 .container
 {
     border-radius: 15px;
-    padding: 10px;
+    padding: 20px;
     margin: 10px 5px;
 }
 
@@ -15,6 +15,12 @@ body
 {
     background-color: white;
     box-shadow: 0px 7px 20px -6px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+
+    &.noclick
+    {
+        cursor: default;
+    }
 }
 
 .name
@@ -32,9 +38,11 @@ body
 {
     background-color: rgb(141, 141, 255);
     font-size: 1.2rem;
+    padding: 10px;
+    border-radius: 25px;
 }
 
-.players
+.flex-r
 {
     display: flex;
     flex-direction: row;
@@ -43,6 +51,22 @@ body
 .input-holder
 {
     display: flex;
+    flex-direction: row;
+}
+
+.input-container
+{
+    margin: 10px;
+}
+
+.input-container.button
+{
+    border: none;
+    background-color: rgb(141, 141, 255);
+    color: white;
+    font-size: 1.1rem;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
 .input-container > label
@@ -57,8 +81,8 @@ body
 	outline: none;
 	border-bottom: .2em solid rgb(141, 141, 255);
 	background: white;
-	border-radius: .2em .2em 0 0;
-	padding: .4em;
+	border-radius: 5px 5px 0 0;
+	padding: 10px;
 	color: rgb(141, 141, 255);
 }
 
@@ -66,4 +90,17 @@ body
 {
     font-size: 3rem;
     text-align: center;
+    text-shadow: 2px 2px 2px rgb(141, 141, 255);
+}
+
+.categories, .mechanics
+{
+    display: flex;
+}
+
+.category, .mechanic
+{
+    background-color: rgb(141, 208, 255);
+    padding: 10px;
+    border-radius: 25px;
 }

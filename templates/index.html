@@ -7,24 +7,28 @@
     <title>Game Search</title>
     <script>
         function generateGameHTML(game) {
-           return `<div class="container game" onclick="window.open('/game/${game.name}', '_blank')">
-               <div class="name">${game.name}</div>
-               <div class="tiles">
-                   <div class="container tile players">
-                       <img src="/static/assets/people.png" width="20">
-                       <div class="minplayers">${game.minplayers}</div>
-                       <div>&nbsp;-&nbsp;</div>
-                       <div class="maxplayers">${game.maxplayers}</div>
-                   </div>
-                   <div class="container tile minage">Min Age: ${game.minage}</div>
-                   <div class="container tile playingtime">Playing Time: ${game.playingtime}</div>
-               </div>
-               <div class="categories">Categories: ${game.categories.join(", ")}</div>
-               <div class="mechanics">Mechanics: ${game.mechanics.join(", ")}</div>
-               <div class="description">Description: ${game.description}</div>
-               <!-- <div class="score">Score: ${game.score}</div> -->
-               <!-- <div class="count">Searched ${game.count} times</div> -->
-           </div>`
+            return `<div class="container game" onclick="window.location.href='/game/${game.name}'">
+                <div class="name">${game.name}</div>
+                <div class="tiles">
+                    <div class="container tile flex-r">
+                        <img src="/static/assets/people.png" width="20" height="20">
+                        <div>${game.minplayers}</div>
+                        <div>&nbsp;-&nbsp;</div>
+                        <div>${game.maxplayers}</div>
+                    </div>
+                    <div class="container tile minage">Age: ${game.minage}+</div>
+                    <div class="container tile flex-r">
+                        <img src="/static/assets/time-left.png" width="20" height="20">
+                        <div>${game.playingtime} min.</div>
+                    </div>
+                </div>
+                <p> Categories: </p>
+                <div class="categories">
+                     ${game.categories.map(category => `<div class="container category">${category}</div>`).join("")}
+                 </div>
+                <!-- <div class="score">Score: ${game.score}</div> -->
+                <!-- <div class="count">Searched ${game.count} times</div> -->
+            </div>`
         }
 
         async function searchGames() {
@@ -120,10 +124,10 @@
             <label>Boardgame Mechanic</label>
             <input type="text" id="mechanic" placeholder="Enter mechanic">
         </div>
-    </div>
 
-    <button onclick="searchGames()">Search</button>
-    <button onclick="displayPopularSearches()">Popular Searches</button>
+        <button class="input-container button" onclick="searchGames()">Search</button>
+        <button class="input-container button" onclick="displayPopularSearches()">Popular Searches</button>
+    </div>
 
     <div id="popular-searches"></div>
     <div id="results"></div>
