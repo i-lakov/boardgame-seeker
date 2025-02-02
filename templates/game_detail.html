@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Game Details</title>
+    <script>
+        async function loadGameDetails() {
+            let gameName = window.location.pathname.split('/').pop();
+            let response = await fetch(`/game_details/${gameName}`);
+            let data = await response.json();
+
+            let gameDetailsDiv = document.getElementById("game-details");
+            gameDetailsDiv.innerHTML = `
+                <h1>${data.game.details.name}</h1>
+                <div class="tiles">
+                    <div class="container tile players">
+                        People
+                        <div class="maxplayers">${data.game.details.maxplayers}</div> -
+                        <div class="minplayers">${data.game.details.minplayers}</div>
+                    </div>
+                    <div class="container tile minage">Min Age: ${data.game.details.minage}</div>
+                    <div class="container tile playingtime">Playing Time: ${data.game.details.playingtime}</div>
+                </div>
+                <div class="categories">Categories: ${data.game.attributes.boardgamecategory.join(", ")}</div>
+                <div class="mechanics">Mechanics: ${data.game.attributes.boardgamemechanic.join(", ")}</div>
+                <div class="description">Description: ${data.game.details.description}</div>
+            `;
+
+            let similarGamesDiv = document.getElementById("similar-games");
+            similarGamesDiv.innerHTML = "<h3>Similar Games:</h3><ul>";
+            data.similar_games.forEach(game => {
+                similarGamesDiv.innerHTML += `
+                    <li>
+                        <a href="/game/${game.details.name}" target="_blank">${game.details.name}</a>
+                    </li>`;
+            });
+            similarGamesDiv.innerHTML += "</ul>";
+        }
+
+        window.onload = loadGameDetails;
+    </script>
+</head>
+<body>
+    <div id="game-details"></div>
+    <div id="similar-games"></div>
+</body>
+</html>

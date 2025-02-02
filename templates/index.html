@@ -28,7 +28,7 @@
             resultsDiv.innerHTML = "<h3>Results:</h3><ul>";
             data.forEach(game => {
                 resultsDiv.innerHTML += `
-                    <div class="container game">
+                    <div class="container game" onclick="window.open('/game/${game.name}', '_blank')">
                         <div class="name">${game.name}</div>
                         <div class="tiles">
                             <div class="container tile players">
@@ -46,11 +46,51 @@
                     </div>`;
             });
             resultsDiv.innerHTML += "</ul>";
+
+            // Hide the popular searches section when showing search results
+            document.getElementById("popular-searches").style.display = "none";
         }
+
+        function displayPopularSearches() {
+            // Clear search results and show popular searches
+            document.getElementById("results").innerHTML = "";
+            document.getElementById("popular-searches").style.display = "block";
+            loadPopularSearches();
+        }
+
+        async function loadPopularSearches() {
+            let response = await fetch('/popular_searches');
+            let data = await response.json();
+
+            let popularDiv = document.getElementById("popular-searches");
+            popularDiv.innerHTML = "<h3>Popular Searches:</h3><ul>";
+            data.forEach(game => {
+                popularDiv.innerHTML += `
+                    <div class="container game" onclick="window.open('/game/${game.name}', '_blank')">
+                        <div class="name">${game.name}</div>
+                        <div class="tiles">
+                            <div class="container tile players">
+                                People
+                                <div class="maxplayers">${game.maxplayers}</div> -
+                                <div class="minplayers">${game.minplayers}</div>
+                            </div>
+                            <div class="container tile minage">Min Age: ${game.minage}</div>
+                            <div class="container tile playingtime">Playing Time: ${game.playingtime}</div>
+                        </div>
+                        <div class="categories">Categories: ${game.categories.join(", ")}</div>
+                        <div class="mechanics">Mechanics: ${game.mechanics.join(", ")}</div>
+                        <div class="description">Description: ${game.description}</div>
+                        <div class="count">Searched ${game.count} times</div>
+                    </div>`;
+            });
+            popularDiv.innerHTML += "</ul>";
+        }
+
+        window.onload = loadPopularSearches;
     </script>
 </head>
 <body>
-    <h1>Game Search</h1>
+    <h1>Game Search</h1>   
     <label>Game Name (Fuzzy):</label>
     <input type="text" id="name" placeholder="Enter game name">
     
@@ -58,16 +98,16 @@
     <input type="text" id="description" placeholder="Enter game description">
     
     <label>Max Players (Less Than):</label>
-    <input type="number" id="maxplayers" value="5">
+    <input type="number" id="maxplayers" placeholder="5">
     
     <label>Min Age (Greater Than or Equal):</label>
-    <input type="number" id="minage" value="0">
+    <input type="number" id="minage" placeholder="0">
     
     <label>Min Players (Greater Than or Equal):</label>
-    <input type="number" id="minplayers" value="1">
+    <input type="number" id="minplayers" placeholder="1">
     
     <label>Playing Time (Less Than):</label>
-    <input type="number" id="playingtime" value="60">
+    <input type="number" id="playingtime" placeholder="60">
     
     <label>Boardgame Category:</label>
     <input type="text" id="category" placeholder="Enter category">
@@ -76,7 +116,9 @@
     <input type="text" id="mechanic" placeholder="Enter mechanic">
     
     <button onclick="searchGames()">Search</button>
+    <button onclick="displayPopularSearches()">Popular Searches</button>
 
+    <div id="popular-searches"></div>
     <div id="results"></div>
 </body>
 </html>
