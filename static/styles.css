@@ -48,19 +48,23 @@ body
     flex-direction: row;
 }
 
-.input-holder
-{
+.input-holder {
     display: flex;
-    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center; 
 }
 
-.input-container
-{
-    margin: 10px;
+.input-container {
+    flex: 1 1 200px; /* Allows items to grow, shrink, and set a minimum width */
+    min-width: 200px; /* Ensures inputs don't get too small */
+    margin: 20px;
 }
 
-.input-container.button
-{
+.input-container.button {
+    flex: 1 1 auto; /* Allows buttons to adjust */
+    padding: 10px 15px;
+    text-align: center;
     border: none;
     background-color: rgb(141, 141, 255);
     color: white;
@@ -84,6 +88,7 @@ body
 	border-radius: 5px 5px 0 0;
 	padding: 10px;
 	color: rgb(141, 141, 255);
+    width: 100%;
 }
 
 .title
