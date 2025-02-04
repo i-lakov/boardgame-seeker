@@ -9,7 +9,7 @@ def log_search_game(game_id: str):
     doc_id = str(game_id)
     try:
         es.update(
-            index=SEARCH_LOG_INDEX,
+            index=GAMES_SITE_DATA,
             id=doc_id,
             body={
                 "script": {
@@ -29,7 +29,7 @@ def log_search_game(game_id: str):
 
 def search_game_by_id(game_id: str):
     log_search_game(game_id)
-    es.indices.refresh(index=SEARCH_LOG_INDEX)
+    es.indices.refresh(index=GAMES_SITE_DATA)
     return search_game_by_id_without_log(game_id)
 
 def search_game_by_id_without_log(game_id: str):
@@ -49,7 +49,7 @@ def get_popular_searches(limit: int = 10):
         "sort": [{"count": {"order": "desc"}}],
         "size": limit
     }
-    response = es.search(index=SEARCH_LOG_INDEX, body=query)
+    response = es.search(index=GAMES_SITE_DATA, body=query)
     
     print("\nPopular Searches:")
     for hit in response["hits"]["hits"]:

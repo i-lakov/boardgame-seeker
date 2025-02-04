@@ -121,7 +121,7 @@ def popular_searches():
         "sort": [{"count": {"order": "desc"}}],
         "size": 10
     }
-    response = es.search(index=SEARCH_LOG_INDEX, body=query)
+    response = es.search(index=GAMES_SITE_DATA, body=query)
     
     # Fetch full game details for each popular search
     results = []
@@ -165,23 +165,67 @@ def game_detail(name):
 
 @app.route("/game_details/<name>")
 def game_details(name):
-    query = {
-        "query": {
-            "match": {
-                "details.name": name
-            }
-        }
-    }
-    response = es.search(index=INDEX_NAME, body=query)
-    game = response["hits"]["hits"][0]['_source']
+    # Get game details
+    game_query = {"query": {"match": {"details.name": name}}}
+    game_response = es.search(index=INDEX_NAME, body=game_query)
+    game = game_response["hits"]["hits"][0]['_source']
+    
+    try:
+        log_response = es.get(index=GAMES_SITE_DATA, id=game["id"])
+        reviews = log_response["_source"].get("reviews", [])
+    except:
+        reviews = []
     
     # Get similar games
     similar_games = more_like_this(game["id"])
     
     return jsonify({
         "game": game,
-        "similar_games": similar_games
+        "similar_games": similar_games,
+        "reviews": reviews
     })
+
+@app.route("/submit_review", methods=["POST"])
+def submit_review():
+    data = request.json
+    game_id = data["game_id"]
+    review_text = data["review_text"]
+    
+    try:
+        es.update(
+            index=GAMES_SITE_DATA,
+            id=game_id,
+            body={
+                "script": {
+                    "source": """
+                        if (ctx._source.reviews == null) {
+                            ctx._source.reviews = [];
+                        }
+                        ctx._source.reviews.add([
+                            'text': params.review_text,
+                            'timestamp': params.timestamp
+                        ]);
+                    """,
+                    "lang": "painless",
+                    "params": {
+                        "review_text": review_text,
+                        "timestamp": datetime.datetime.now().isoformat()
+                    }
+                },
+                "upsert": {
+                    "game_id": game_id,
+                    "reviews": [
+                        {
+                            "text": review_text,
+                            "timestamp": datetime.datetime.now().isoformat()
+                        }
+                    ]
+                }
+            }
+        )
+        return jsonify({"status": "success"})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
     app.run(debug=True)

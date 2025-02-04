@@ -1,68 +1,98 @@
-body
-{
+body {
     font-family: Arial, Helvetica, sans-serif;
     background-color: lightgray;
 }
 
-.container
-{
-    border-radius: 15px;
+.container {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     padding: 20px;
-    margin: 10px 5px;
+    margin: 10px 0;
 }
 
-.game
-{
+.game {
     background-color: white;
     box-shadow: 0px 7px 20px -6px rgba(0, 0, 0, 0.5);
     cursor: pointer;
-
-    &.noclick
-    {
-        cursor: default;
-    }
+    transition: transform 0.2s;
 }
 
-.name
-{
+.game:hover {
+    transform: translateY(-2px);
+}
+
+.game.noclick {
+    cursor: default;
+}
+
+.name {
     font-size: 1.6rem;
 }
 
-.tiles
-{
-    display: flex;
-    flex-direction: row;
+.title {
+    font-size: 3rem;
+    text-align: center;
+    text-shadow: 2px 2px 2px rgb(141, 141, 255);
+    color: #2c3e50;
+    cursor: pointer;
 }
 
-.tile
-{
+.tiles {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.tile {
     background-color: rgb(141, 141, 255);
     font-size: 1.2rem;
     padding: 10px;
     border-radius: 25px;
 }
 
-.flex-r
-{
+.flex-r {
     display: flex;
     flex-direction: row;
+    align-items: center;
+    gap: 5px;
+}
+
+.categories, .mechanics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 10px 0;
+}
+
+.category, .mechanic {
+    background: #e9ecef;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 0.9em;
+}
+
+.description {
+    line-height: 1.6;
+    color: #495057;
 }
 
 .input-holder {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
-    justify-content: center; 
+    justify-content: center;
 }
 
 .input-container {
-    flex: 1 1 200px; /* Allows items to grow, shrink, and set a minimum width */
-    min-width: 200px; /* Ensures inputs don't get too small */
+    flex: 1 1 200px;
+    min-width: 200px;
     margin: 20px;
 }
 
 .input-container.button {
-    flex: 1 1 auto; /* Allows buttons to adjust */
+    flex: 1 1 auto;
     padding: 10px 15px;
     text-align: center;
     border: none;
@@ -73,39 +103,76 @@ body
     cursor: pointer;
 }
 
-.input-container > label
-{
+.input-container > label {
     font-size: 0.8rem;
 }
 
-.input-container > input
-{
+.input-container > input {
     appearance: none;
-	border: none;
-	outline: none;
-	border-bottom: .2em solid rgb(141, 141, 255);
-	background: white;
-	border-radius: 5px 5px 0 0;
-	padding: 10px;
-	color: rgb(141, 141, 255);
+    border: none;
+    outline: none;
+    border-bottom: .2em solid rgb(141, 141, 255);
+    background: white;
+    border-radius: 5px 5px 0 0;
+    padding: 10px;
+    color: rgb(141, 141, 255);
     width: 100%;
 }
 
-.title
-{
-    font-size: 3rem;
-    text-align: center;
-    text-shadow: 2px 2px 2px rgb(141, 141, 255);
+/* Reviews Section */
+#reviews {
+    margin-top: 30px;
+    padding: 20px;
 }
 
-.categories, .mechanics
-{
-    display: flex;
+.review {
+    padding: 15px 0;
+    border-bottom: 1px solid #eee;
 }
 
-.category, .mechanic
-{
-    background-color: rgb(141, 208, 255);
-    padding: 10px;
-    border-radius: 25px;
+.review:last-child {
+    border-bottom: none;
+}
+
+.review-text {
+    font-size: 0.95em;
+    line-height: 1.5;
+    color: #2c3e50;
+    margin-bottom: 5px;
+}
+
+.review-date {
+    font-size: 0.85em;
+    color: #6c757d;
+}
+
+.review-form {
+    margin-top: 25px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+#review-text {
+    width: 100%;
+    height: 100px;
+    padding: 12px;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    resize: vertical;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #45a049;
 }

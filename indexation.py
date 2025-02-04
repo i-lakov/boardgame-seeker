@@ -45,18 +45,18 @@ if not es.indices.exists(index=INDEX_NAME):
     print("Indexing complete!")
     es.indices.refresh(index=INDEX_NAME)
 
-if not es.indices.exists(index=SEARCH_LOG_INDEX):
-    es.indices.create(index=SEARCH_LOG_INDEX)
-    print(f"Index '{SEARCH_LOG_INDEX}' created for logging search terms.")
+if not es.indices.exists(index=GAMES_SITE_DATA):
+    es.indices.create(index=GAMES_SITE_DATA)
+    print(f"Index '{GAMES_SITE_DATA}' created for logging search terms.")
 
 # Prompt the user if they want to delete the index
 delete_index = input(f"\nDo you want to delete the index '{INDEX_NAME}'? (y/N): ").strip().upper()
 
 if delete_index == 'Y':
-   if es.indices.exists(index=INDEX_NAME):
-       es.indices.delete(index=INDEX_NAME)
-       print(f"\nIndex '{INDEX_NAME}' deleted.")
+   if es.indices.exists(index=GAMES_SITE_DATA):
+       es.indices.delete(index=GAMES_SITE_DATA)
+       print(f"\nIndex '{GAMES_SITE_DATA}' deleted.")
    else:
-       print(f"Index '{INDEX_NAME}' does not exist.")
+       print(f"Index '{GAMES_SITE_DATA}' does not exist.")
 else:
     print("Index deletion skipped.")

@@ -48,14 +48,57 @@
                     </li>`;
             });
             similarGamesDiv.innerHTML += "</ul>";
+
+            let reviewsDiv = document.getElementById("reviews");
+            reviewsDiv.innerHTML = `<h3>Player Reviews</h3>`;
+            
+            if (data.reviews && data.reviews.length > 0) {
+                data.reviews.forEach(review => {
+                    const date = new Date(review.timestamp).toLocaleDateString();
+                    reviewsDiv.innerHTML += `
+                        <div class="review">
+                            <div class="review-text">${review.text}</div>
+                            <div class="review-date">Posted on ${date}</div>
+                        </div>`;
+                });
+            } else {
+                reviewsDiv.innerHTML += `<p>No reviews yet. Be the first to write one!</p>`;
+            }
+
+            reviewsDiv.innerHTML += `
+                <div class="review-form">
+                    <textarea id="review-text" placeholder="Write your review..."></textarea>
+                    <button onclick="submitReview('${data.game.id}')">Submit Review</button>
+                </div>`;
+        }
+
+        async function submitReview(gameId) {
+            const reviewText = document.getElementById("review-text").value.trim();
+            if (!reviewText) return;
+
+            try {
+                await fetch('/submit_review', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        game_id: gameId,
+                        review_text: reviewText
+                    })
+                });
+                document.getElementById("review-text").value = "";
+                await loadGameDetails();
+            } catch (error) {
+                console.error('Error submitting review:', error);
+            }
         }
 
         window.onload = loadGameDetails;
     </script>
 </head>
 <body>
-    <h1 class="title" onclick="window.location.href='/'">Board Game Search</h1>
+    <h1 class="title" onclick="window.location.href='/'">Board Game Search</h1>    
     <div class="container game noclick" id="game-details"></div>
+    <div class="container game noclick" id="reviews"></div>
     <div class="container game noclick" id="similar-games"></div>
 </body>
 </html>
