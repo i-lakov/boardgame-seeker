@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <title>Game Search</title>
     <script>
-        function generateGameHTML(game) {
+        function generateGameHTML(game, shouldShowScore) {
             return `<div class="container game" onclick="window.location.href='/game/${game.name}'">
                 <div class="name">${game.name}</div>
                 <div class="tiles">
@@ -26,8 +26,8 @@
                 <div class="categories">
                     ${game.categories.map(category => `<div class="container category">${category}</div>`).join("")}
                 </div>
-                <div class="score">Score: ${game.score}</div>
-                <!-- <div class="count">Searched ${game.count} times</div> -->
+                ${shouldShowScore ? `<div class="score">Score: ${game.score}</div>` : ""}
+                ${!shouldShowScore ? `<div class="count">Searched ${game.count} times</div>` : ""}
             </div>`
         }
 
@@ -52,7 +52,7 @@
             let resultsDiv = document.getElementById("results");
             resultsDiv.innerHTML = "<h3>Results:</h3><ul>";
             data.forEach(game => {
-                resultsDiv.innerHTML += generateGameHTML(game);
+                resultsDiv.innerHTML += generateGameHTML(game, true);
             });
             resultsDiv.innerHTML += "</ul>";
 
@@ -74,7 +74,7 @@
             let popularDiv = document.getElementById("popular-searches");
             popularDiv.innerHTML = "<h3>Popular Searches:</h3><ul>";
             data.forEach(game => {
-                popularDiv.innerHTML += generateGameHTML(game);
+                popularDiv.innerHTML += generateGameHTML(game, false);
             });
             popularDiv.innerHTML += "</ul>";
         }
