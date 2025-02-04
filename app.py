@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify, render_template
+from sentence_transformers import SentenceTransformer
 from elasticsearch import Elasticsearch
 from constants import *
 from recommendation import *
@@ -226,6 +227,47 @@ def submit_review():
         return jsonify({"status": "success"})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+@app.route("/semantic_search", methods=["GET"])
+def semantic_search():
+    query_text = request.args.get("query", "")
+
+    model = SentenceTransformer("all-MiniLM-L6-v2")
+
+    if not query_text:
+        return jsonify({"error": "Query text is required"}), 400
+
+    # Generate query embedding
+    query_embedding = model.encode(query_text).tolist()
+
+    # Build Elasticsearch k-NN search query
+    es_query = {
+        "size": 10,
+        "knn": {
+            "field": "description_vector",
+            "query_vector": query_embedding,
+            "k": 10,
+            "num_candidates": 100
+        }
+    }
+
+
+
+    # Perform the search
+    response = es.search(index=INDEX_NAME, body=es_query)
+
+    # Format the response
+    results = [
+        {
+            "id": hit["_id"],
+            "name": hit["_source"]["details"]["name"],
+            "description": hit["_source"]["details"]["description"],
+            "score": hit["_score"]
+        }
+        for hit in response["hits"]["hits"]
+    ]
+
+    return jsonify(results)
 
 if __name__ == "__main__":
     app.run(debug=True)
