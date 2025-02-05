@@ -176,3 +176,39 @@ button {
 button:hover {
     background-color: #45a049;
 }
+/* Sentiment Analysis Styles */
+#sentiment-analysis {
+    margin-top: 20px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.sentiment-metric {
+    margin: 15px 0;
+}
+
+.polarity-bar, .subjectivity-bar {
+    width: 100%;
+    height: 10px;
+    background: #e9ecef;
+    border-radius: 5px;
+    overflow: hidden;
+    margin: 5px 0;
+}
+
+.polarity-fill, .subjectivity-fill {
+    height: 100%;
+    background: #4CAF50;
+    transition: width 0.3s;
+}
+
+.polarity-value, .subjectivity-value {
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+small {
+    color: #6c757d;
+    font-size: 0.85em;
+}

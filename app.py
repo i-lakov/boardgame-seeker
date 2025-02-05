@@ -3,6 +3,7 @@ from sentence_transformers import SentenceTransformer
 from elasticsearch import Elasticsearch
 from constants import *
 from recommendation import *
+from textblob import TextBlob
 
 app = Flask(__name__)
 es = Elasticsearch("http://localhost:9200")
@@ -156,34 +157,40 @@ def game_detail(name):
     response = es.search(index=INDEX_NAME, body=query)
     game = response["hits"]["hits"][0]['_source']
     
-    # Log the search
     log_search_game(game["id"])
     
-    # Get similar games
     similar_games = more_like_this(game["id"])
     
     return render_template("game_detail.html", game=game, similar_games=similar_games)
 
 @app.route("/game_details/<name>")
 def game_details(name):
-    # Get game details
-    game_query = {"query": {"match": {"details.name": name}}}
-    game_response = es.search(index=INDEX_NAME, body=game_query)
-    game = game_response["hits"]["hits"][0]['_source']
+    query = {"query": {"match": {"details.name": name}}}
+    response = es.search(index=INDEX_NAME, body=query)
+    game = response["hits"]["hits"][0]['_source']
     
     try:
-        log_response = es.get(index=GAMES_SITE_DATA, id=game["id"])
-        reviews = log_response["_source"].get("reviews", [])
+        game_data = es.get(index=GAMES_SITE_DATA, id=game["id"])
+        reviews = game_data["_source"].get("reviews", [])
     except:
         reviews = []
     
-    # Get similar games
+    sentiment = analyze_reviews(reviews)
+
+    for review in reviews:
+        blob = TextBlob(review["text"])
+        polarity = blob.sentiment.polarity
+        review["polarity"] = polarity
+        review["subjectivity"] = blob.sentiment.subjectivity
+        review["classification"] = analyze_sentiment(polarity)
+
     similar_games = more_like_this(game["id"])
     
     return jsonify({
         "game": game,
         "similar_games": similar_games,
-        "reviews": reviews
+        "reviews": reviews,
+        "sentiment": sentiment
     })
 
 @app.route("/submit_review", methods=["POST"])
@@ -268,6 +275,33 @@ def semantic_search():
     ]
 
     return jsonify(results)
+
+def analyze_reviews(reviews):
+    if not reviews:
+        return None
+    
+    total_polarity = 0
+    total_subjectivity = 0
+    for review in reviews:
+        blob = TextBlob(review["text"])
+        total_polarity += blob.sentiment.polarity  # Polarity: -1 (negative) to 1 (positive)
+        total_subjectivity += blob.sentiment.subjectivity  # Subjectivity: 0 (objective) to 1 (subjective)
+    
+    avg_polarity = total_polarity / len(reviews)
+    avg_subjectivity = total_subjectivity / len(reviews)
+    
+    return {
+        "average_polarity": avg_polarity,
+        "average_subjectivity": avg_subjectivity
+    }
+
+def analyze_sentiment(sentiment: str):
+    if sentiment > 0:
+        return "Positive"
+    elif sentiment < 0:
+        return "Negative"
+    else:
+        return "Neutral"
 
 if __name__ == "__main__":
     app.run(debug=True)

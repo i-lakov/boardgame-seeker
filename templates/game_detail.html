@@ -11,6 +11,7 @@
             let response = await fetch(`/game_details/${gameName}`);
             let data = await response.json();
 
+            // Game Details Section
             let gameDetailsDiv = document.getElementById("game-details");
             gameDetailsDiv.innerHTML = `
                 <div class="name">${data.game.details.name}</div>
@@ -29,16 +30,21 @@
                 </div>
                 <p> Categories: </p>
                 <div class="categories">
-                     ${data.game.attributes.boardgamecategory.map(category => `<div class="container category">${category}</div>`).join("")}
+                    ${data.game.attributes.boardgamecategory.map(category => 
+                        `<div class="container category">${category}</div>`
+                    ).join("")}
                 </div>
                 <p> Mechanics: </p>
                 <div class="mechanics">
-                     ${data.game.attributes.boardgamemechanic.map(mechanic => `<div class="container mechanic">${mechanic}</div>`).join("")}
+                    ${data.game.attributes.boardgamemechanic.map(mechanic => 
+                        `<div class="container mechanic">${mechanic}</div>`
+                    ).join("")}
                 </div>
                 <p> Description: </p>
                 <div class="description">${data.game.details.description}</div>
             `;
 
+            // Similar Games Section
             let similarGamesDiv = document.getElementById("similar-games");
             similarGamesDiv.innerHTML = `<div class="name">Similar Games:</div><ul>`;
             data.similar_games.forEach(game => {
@@ -49,28 +55,61 @@
             });
             similarGamesDiv.innerHTML += "</ul>";
 
-            let reviewsDiv = document.getElementById("reviews");
-            reviewsDiv.innerHTML = `<h3>Player Reviews</h3>`;
-            
-            if (data.reviews && data.reviews.length > 0) {
-                data.reviews.forEach(review => {
-                    const date = new Date(review.timestamp).toLocaleDateString();
-                    reviewsDiv.innerHTML += `
-                        <div class="review">
-                            <div class="review-text">${review.text}</div>
-                            <div class="review-date">Posted on ${date}</div>
-                        </div>`;
-                });
-            } else {
-                reviewsDiv.innerHTML += `<p>No reviews yet. Be the first to write one!</p>`;
-            }
-
-            reviewsDiv.innerHTML += `
-                <div class="review-form">
-                    <textarea id="review-text" placeholder="Write your review..."></textarea>
-                    <button onclick="submitReview('${data.game.id}')">Submit Review</button>
+            let sentimentDiv = document.getElementById("sentiment-analysis");
+        if (data.sentiment) {
+            sentimentDiv.innerHTML = `
+                <h3>Review Sentiment Analysis</h3>
+                <div class="sentiment-metric">
+                    <div class="metric-label">Overall Polarity:</div>
+                    <div class="metric-value">${data.sentiment.average_polarity.toFixed(2)}</div>
+                    <div class="polarity-bar">
+                        <div class="polarity-fill" style="width: ${(data.sentiment.average_polarity + 1) * 50}%"></div>
+                    </div>
+                    <div class="metric-explanation">
+                        (-1 = Negative, 0 = Neutral, +1 = Positive)
+                    </div>
+                </div>
+                <div class="sentiment-metric">
+                    <div class="metric-label">Subjectivity:</div>
+                    <div class="metric-value">${data.sentiment.average_subjectivity.toFixed(2)}</div>
+                    <div class="subjectivity-bar">
+                        <div class="subjectivity-fill" style="width: ${data.sentiment.average_subjectivity * 100}%"></div>
+                    </div>
+                    <div class="metric-explanation">
+                        (0 = Factual, 1 = Opinionated)
+                    </div>
                 </div>`;
+        } else {
+            sentimentDiv.innerHTML = `<p>No sentiment data available (no reviews yet)</p>`;
         }
+
+            // Reviews Section
+        let reviewsDiv = document.getElementById("reviews");
+        reviewsDiv.innerHTML = `<h3>Player Reviews</h3>`;
+        
+        if (data.reviews.length > 0) {
+            data.reviews.forEach(review => {
+                const date = new Date(review.timestamp).toLocaleDateString();
+                reviewsDiv.innerHTML += `
+                    <div class="review">
+                        <div class="review-text">${review.text}</div>
+                        <div class="review-sentiment">
+                            <div class="review-date">Polarity: ${review.polarity.toFixed(2)}</div>
+                            <div class="review-date">Classified as: ${review.classification}</div>
+                            <div class="review-date">Subjectivity: ${review.subjectivity.toFixed(2)}</div>
+                        </div>
+                    </div>`;
+            });
+        } else {
+            reviewsDiv.innerHTML += `<p>No reviews yet. Be the first to share your thoughts!</p>`;
+        }
+
+        reviewsDiv.innerHTML += `
+            <div class="review-form">
+                <textarea id="review-text" placeholder="Write your review..."></textarea>
+                <button onclick="submitReview('${data.game.id}')">Submit Review</button>
+            </div>`;
+    }
 
         async function submitReview(gameId) {
             const reviewText = document.getElementById("review-text").value.trim();
@@ -96,8 +135,9 @@
     </script>
 </head>
 <body>
-    <h1 class="title" onclick="window.location.href='/'">Board Game Search</h1>    
+    <h1 class="title" onclick="window.location.href='/'">Board Game Search</h1>
     <div class="container game noclick" id="game-details"></div>
+    <div class="container game noclick" id="sentiment-analysis"></div>
     <div class="container game noclick" id="reviews"></div>
     <div class="container game noclick" id="similar-games"></div>
 </body>
