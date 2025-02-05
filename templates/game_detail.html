@@ -68,16 +68,6 @@
                     <div class="metric-explanation">
                         (-1 = Negative, 0 = Neutral, +1 = Positive)
                     </div>
-                </div>
-                <div class="sentiment-metric">
-                    <div class="metric-label">Subjectivity:</div>
-                    <div class="metric-value">${data.sentiment.average_subjectivity.toFixed(2)}</div>
-                    <div class="subjectivity-bar">
-                        <div class="subjectivity-fill" style="width: ${data.sentiment.average_subjectivity * 100}%"></div>
-                    </div>
-                    <div class="metric-explanation">
-                        (0 = Factual, 1 = Opinionated)
-                    </div>
                 </div>`;
         } else {
             sentimentDiv.innerHTML = `<p>No sentiment data available (no reviews yet)</p>`;
@@ -96,7 +86,6 @@
                         <div class="review-sentiment">
                             <div class="review-date">Polarity: ${review.polarity.toFixed(2)}</div>
                             <div class="review-date">Classified as: ${review.classification}</div>
-                            <div class="review-date">Subjectivity: ${review.subjectivity.toFixed(2)}</div>
                         </div>
                     </div>`;
             });

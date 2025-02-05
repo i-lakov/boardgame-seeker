@@ -3,9 +3,10 @@ from sentence_transformers import SentenceTransformer
 from elasticsearch import Elasticsearch
 from constants import *
 from recommendation import *
-from textblob import TextBlob
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 app = Flask(__name__)
+analyzer = SentimentIntensityAnalyzer()
 es = Elasticsearch("http://localhost:9200")
 
 @app.route("/")
@@ -178,10 +179,8 @@ def game_details(name):
     sentiment = analyze_reviews(reviews)
 
     for review in reviews:
-        blob = TextBlob(review["text"])
-        polarity = blob.sentiment.polarity
+        polarity = analyzer.polarity_scores(review["text"])["compound"]
         review["polarity"] = polarity
-        review["subjectivity"] = blob.sentiment.subjectivity
         review["classification"] = analyze_sentiment(polarity)
 
     similar_games = more_like_this(game["id"])
@@ -281,24 +280,19 @@ def analyze_reviews(reviews):
         return None
     
     total_polarity = 0
-    total_subjectivity = 0
     for review in reviews:
-        blob = TextBlob(review["text"])
-        total_polarity += blob.sentiment.polarity  # Polarity: -1 (negative) to 1 (positive)
-        total_subjectivity += blob.sentiment.subjectivity  # Subjectivity: 0 (objective) to 1 (subjective)
+        total_polarity += analyzer.polarity_scores(review["text"])["compound"]  # Polarity: -1 (negative) to 1 (positive)
     
     avg_polarity = total_polarity / len(reviews)
-    avg_subjectivity = total_subjectivity / len(reviews)
     
     return {
-        "average_polarity": avg_polarity,
-        "average_subjectivity": avg_subjectivity
+        "average_polarity": avg_polarity
     }
 
-def analyze_sentiment(sentiment: str):
-    if sentiment > 0:
+def analyze_sentiment(polarity: str):
+    if polarity > 0:
         return "Positive"
-    elif sentiment < 0:
+    elif polarity < 0:
         return "Negative"
     else:
         return "Neutral"
