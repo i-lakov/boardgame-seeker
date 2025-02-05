@@ -21,8 +21,8 @@ def search():
     minage = request.args.get("minage", None)
     minplayers = request.args.get("minplayers", None)
     playingtime = request.args.get("playingtime", None)
-    category = request.args.getlist("category")  # Supports multiple values
-    mechanic = request.args.getlist("mechanic")  # Supports multiple values
+    category = request.args.getlist("category")
+    mechanic = request.args.getlist("mechanic")
 
     must_conditions = []
 
@@ -77,13 +77,13 @@ def search():
             }
         })
 
-    # Match categories (list search)
+    # Match categories
     for cat in category:
         must_conditions.append({
             "term": {"attributes.boardgamecategory": cat}
         })
 
-    # Match mechanics (list search)
+    # Match mechanics
     for mech in mechanic:
         must_conditions.append({
             "term": {"attributes.boardgamemechanic": mech}
@@ -118,7 +118,7 @@ def search():
 
 @app.route("/popular_searches")
 def popular_searches():
-    # Fetch popular searches from the SEARCH_LOG_INDEX
+    # Fetch popular searches
     query = {
         "query": {"match_all": {}},
         "sort": [{"count": {"order": "desc"}}],
@@ -246,7 +246,7 @@ def semantic_search():
     # Generate query embedding
     query_embedding = model.encode(query_text).tolist()
 
-    # Build Elasticsearch k-NN search query
+    # Elasticsearch k-NN search query
     es_query = {
         "size": 10,
         "knn": {
@@ -256,10 +256,7 @@ def semantic_search():
             "num_candidates": 100
         }
     }
-
-
-
-    # Perform the search
+    
     response = es.search(index=INDEX_NAME, body=es_query)
 
     # Format the response

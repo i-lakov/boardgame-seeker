@@ -95,11 +95,6 @@ body {
     flex: 1 1 auto;
     padding: 10px 15px;
     text-align: center;
-    border: none;
-    background-color: rgb(141, 141, 255);
-    color: white;
-    font-size: 1.1rem;
-    border-radius: 5px;
     cursor: pointer;
 }
 
@@ -164,17 +159,18 @@ body {
 }
 
 button {
-    background-color: #4CAF50;
+    background-color: rgb(141, 141, 255);
     color: white;
+    font-size: 1.1rem;
+    border-radius: 5px;
     padding: 10px 20px;
     border: none;
-    border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s;
 }
 
 button:hover {
-    background-color: #45a049;
+    background-color: rgb(100, 100, 254);
 }
 /* Sentiment Analysis Styles */
 #sentiment-analysis {

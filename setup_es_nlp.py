@@ -1,8 +1,10 @@
+# ==============================
+# RUN ONLY ONCE IN THE BEGINNING
+# ==============================
 from elasticsearch import Elasticsearch
+from constants import INDEX_NAME
 
 es = Elasticsearch("http://localhost:9200")
-
-INDEX_NAME = "games"
 
 mapping = {
     "properties": {
@@ -15,5 +17,3 @@ mapping = {
 
 # Update the index mapping
 es.indices.put_mapping(index=INDEX_NAME, body=mapping)
-
-# RUN ONLY ONCE IN THE BEGINNING

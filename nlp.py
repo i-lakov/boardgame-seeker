@@ -1,3 +1,6 @@
+# ==================================
+# RUN ONLY ONCE AFTER INDEXING FILES
+# ==================================
 from sentence_transformers import SentenceTransformer
 from elasticsearch import Elasticsearch
 from constants import *
@@ -25,5 +28,3 @@ for game in games['hits']['hits']:
             }
         }
     )
-
-# RUN ONLY ONCE AFTER INDEXING FILES

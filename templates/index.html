@@ -31,7 +31,8 @@
             </div>`
         }
 
-        async function searchGames() {
+        async function searchGames() 
+        {
             let params = new URLSearchParams();
             params.append("name", document.getElementById("name").value);
             params.append("description", document.getElementById("description").value);
@@ -60,14 +61,16 @@
             document.getElementById("popular-searches").style.display = "none";
         }
 
-        function displayPopularSearches() {
+        function displayPopularSearches() 
+        {
             // Clear search results and show popular searches
             document.getElementById("results").innerHTML = "";
             document.getElementById("popular-searches").style.display = "block";
             loadPopularSearches();
         }
 
-        async function loadPopularSearches() {
+        async function loadPopularSearches() 
+        {
             let response = await fetch('/popular_searches');
             let data = await response.json();
 
@@ -77,6 +80,36 @@
                 popularDiv.innerHTML += generateGameHTML(game, false);
             });
             popularDiv.innerHTML += "</ul>";
+        }
+
+        async function semanticSearch() 
+        {
+            const query = document.getElementById('searchInput').value;
+            if (!query) {
+                alert('Please enter a search query.');
+                return;
+            }
+        
+            const response = await fetch(`/semantic_search?query=${encodeURIComponent(query)}`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            const results = await response.json();
+            const resultsDiv = document.getElementById('results-semantic');
+            resultsDiv.innerHTML = ''; // Clear previous results
+
+            if (results.length === 0) {
+                resultsDiv.innerHTML = '<p>No results found.</p>';
+                return;
+            }
+        
+            const ul = document.createElement('ul');
+            results.forEach(result => {
+                const li = document.createElement('li');
+                li.innerHTML = `<strong>${result.name}</strong><br>${result.description}`;
+                ul.appendChild(li);
+            });
+            resultsDiv.appendChild(ul);
         }
 
         window.onload = loadPopularSearches;
@@ -129,7 +162,13 @@
         <button class="input-container button" onclick="displayPopularSearches()">Popular Searches</button>
     </div>
 
+    <div>
+        <input type="text" id="searchInput" placeholder="Enter your search query">
+        <button onclick="semanticSearch()">Semantic search</button>
+    </div>
+
     <div id="popular-searches"></div>
     <div id="results"></div>
+    <div id="results-semantic"></div>
 </body>
 </html>

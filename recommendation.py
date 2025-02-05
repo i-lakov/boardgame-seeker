@@ -2,7 +2,6 @@ import datetime
 from constants import *
 from elasticsearch import Elasticsearch
 
-# Connect to Elasticsearch and load settings
 es = Elasticsearch("http://localhost:9200")
 
 def log_search_game(game_id: str):
