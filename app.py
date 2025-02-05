@@ -264,6 +264,12 @@ def semantic_search():
         {
             "id": hit["_id"],
             "name": hit["_source"]["details"]["name"],
+            "maxplayers": hit["_source"]["details"]["maxplayers"],
+            "minage": hit["_source"]["details"]["minage"],
+            "minplayers": hit["_source"]["details"]["minplayers"],
+            "playingtime": hit["_source"]["details"]["playingtime"],
+            "categories": hit["_source"]["attributes"]["boardgamecategory"],
+            "mechanics": hit["_source"]["attributes"]["boardgamemechanic"],
             "description": hit["_source"]["details"]["description"],
             "score": hit["_score"]
         }

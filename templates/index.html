@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <title>Game Search</title>
     <script>
-        function generateGameHTML(game, shouldShowScore) {
+        function generateGameHTML(game, shouldShowScore, shouldShowSearches) {
             return `<div class="container game" onclick="window.location.href='/game/${game.name}'">
                 <div class="name">${game.name}</div>
                 <div class="tiles">
@@ -27,7 +27,7 @@
                     ${game.categories.map(category => `<div class="container category">${category}</div>`).join("")}
                 </div>
                 ${shouldShowScore ? `<div class="score">Score: ${game.score}</div>` : ""}
-                ${!shouldShowScore ? `<div class="count">Searched ${game.count} times</div>` : ""}
+                ${shouldShowSearches ? `<div class="count">Searched ${game.count} times</div>` : ""}
             </div>`
         }
 
@@ -53,12 +53,14 @@
             let resultsDiv = document.getElementById("results");
             resultsDiv.innerHTML = "<h3>Results:</h3><ul>";
             data.forEach(game => {
-                resultsDiv.innerHTML += generateGameHTML(game, true);
+                resultsDiv.innerHTML += generateGameHTML(game, true, false);
             });
             resultsDiv.innerHTML += "</ul>";
 
             // Hide the popular searches section when showing search results
+            document.getElementById("results").style.display = "block";
             document.getElementById("popular-searches").style.display = "none";
+            document.getElementById("results-semantic").style.display = "none";
         }
 
         function displayPopularSearches() 
@@ -77,7 +79,7 @@
             let popularDiv = document.getElementById("popular-searches");
             popularDiv.innerHTML = "<h3>Popular Searches:</h3><ul>";
             data.forEach(game => {
-                popularDiv.innerHTML += generateGameHTML(game, false);
+                popularDiv.innerHTML += generateGameHTML(game, false, true);
             });
             popularDiv.innerHTML += "</ul>";
         }
@@ -102,14 +104,14 @@
                 resultsDiv.innerHTML = '<p>No results found.</p>';
                 return;
             }
-        
-            const ul = document.createElement('ul');
-            results.forEach(result => {
-                const li = document.createElement('li');
-                li.innerHTML = `<strong>${result.name}</strong><br>${result.description}`;
-                ul.appendChild(li);
+            resultsDiv.innerHTML = "<h3>Semantic search results:</h3><ul>";
+            results.forEach(game => {
+                resultsDiv.innerHTML += generateGameHTML(game, false, false);
             });
-            resultsDiv.appendChild(ul);
+
+            document.getElementById("results-semantic").style.display = "block";
+            document.getElementById("popular-searches").style.display = "none";
+            document.getElementById("results").style.display = "none";
         }
 
         window.onload = loadPopularSearches;
