@@ -79,6 +79,8 @@ body {
 }
 
 .input-holder {
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out;
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
@@ -96,6 +98,7 @@ body {
     padding: 10px 15px;
     text-align: center;
     cursor: pointer;
+    margin: 20px;
 }
 
 .input-container > label {
@@ -167,11 +170,13 @@ button {
     border: none;
     cursor: pointer;
     transition: background-color 0.3s;
+    margin: 20px;
 }
 
 button:hover {
     background-color: rgb(100, 100, 254);
 }
+
 /* Sentiment Analysis Styles */
 #sentiment-analysis {
     margin-top: 20px;

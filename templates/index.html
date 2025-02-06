@@ -114,12 +114,27 @@
             document.getElementById("results").style.display = "none";
         }
 
+        function searchToggle()
+        {
+            let panel = document.getElementById("manual-search");
+            panel.style.display = panel.style.display === "flex" ? "none" : "flex";
+        }
+
         window.onload = loadPopularSearches;
     </script>
 </head>
 <body>
     <h1 class="title">Board Game Search</h1>
     <div class="input-holder">
+        <div class="input-container">
+            <label>Free Text</label>
+            <input type="text" id="searchInput" placeholder="Enter your search query">
+        </div>
+        <button onclick="semanticSearch()">Semantic search</button>
+        <button onclick="searchToggle()">Manual search</button>
+    </div>
+
+    <div class="input-holder" id="manual-search" style="display: none">
         <div class="input-container">
             <label>Game Name (Fuzzy)</label>
             <input type="text" id="name" placeholder="Enter game name">
@@ -162,11 +177,6 @@
 
         <button class="input-container button" onclick="searchGames()">Search</button>
         <button class="input-container button" onclick="displayPopularSearches()">Popular Searches</button>
-    </div>
-
-    <div>
-        <input type="text" id="searchInput" placeholder="Enter your search query">
-        <button onclick="semanticSearch()">Semantic search</button>
     </div>
 
     <div id="popular-searches"></div>
